@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36705.20 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jukeboxmpa", "Jukeboxmpa\Jukeboxmpa.csproj", "{9354B688-D925-4A53-8787-49D11216ABAB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9354B688-D925-4A53-8787-49D11216ABAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9354B688-D925-4A53-8787-49D11216ABAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9354B688-D925-4A53-8787-49D11216ABAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9354B688-D925-4A53-8787-49D11216ABAB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E958E39D-22BF-45AF-81AA-72D892F5830E}
+	EndGlobalSection
+EndGlobal
