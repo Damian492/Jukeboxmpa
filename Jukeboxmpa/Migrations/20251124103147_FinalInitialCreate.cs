@@ -4,10 +4,10 @@
 
 namespace Jukeboxmpa.Migrations
 {
-    /// <inheritdoc />
-    public partial class InitialCreate : Migration
+
+    public partial class FinalInitialCreate : Migration
     {
-        /// <inheritdoc />
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -27,7 +27,6 @@ namespace Jukeboxmpa.Migrations
                 });
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
