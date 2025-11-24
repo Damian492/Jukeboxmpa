@@ -1,5 +1,5 @@
-﻿@using Jukebompa.Models
-@model IEnumerable<Jukebompa.Models.Song>
+﻿@using Jukeboxmpa.Models
+@model IEnumerable<Jukeboxmpa.Models.Song>
 
 <h2>Muziekbeheer</h2>
 
@@ -22,8 +22,8 @@
                 <td>@Html.DisplayFor(modelItem => item.Title)</td>
                 <td>@Html.DisplayFor(modelItem => item.Artist)</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Bewerken</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Verwijderen</a>
+                    <a asp-action="Edit" asp-route-id="@item.ID">Bewerken</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Verwijderen</a>
                 </td>
             </tr>
         }

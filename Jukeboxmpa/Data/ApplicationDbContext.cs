@@ -1,7 +1,7 @@
 ﻿using Jukeboxmpa.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Jukebompa.Data
+namespace Jukeboxmpa.Data
 {
     public class ApplicationDbContext : DbContext
     {

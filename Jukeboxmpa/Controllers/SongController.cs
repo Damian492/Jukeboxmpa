@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Jukebompa.Data;
-using Jukebompa.Models;
+using Jukeboxmpa.Data;
+using Jukeboxmpa.Models;
 
-namespace Jukebompa.Controllers
+namespace Jukeboxmpa.Controllers
 {
     public class SongController : Controller
     {
