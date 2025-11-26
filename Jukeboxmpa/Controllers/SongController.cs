@@ -32,7 +32,6 @@ namespace Jukeboxmpa.Controllers
         // POST: /Song/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-
         public async Task<IActionResult> Create([Bind("Title,Artist,Album,FilePath")] Song song)
         {
             if (ModelState.IsValid)
@@ -45,6 +44,36 @@ namespace Jukeboxmpa.Controllers
             return View(song);
         }
 
+        // 4. DELETE (GET):
+        // GET: /Song/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+                return NotFound();
 
+            var song = await _context.Songs
+                .FirstOrDefaultAsync(m => m.ID == id);
+
+            if (song == null)
+                return NotFound();
+
+            return View(song);
+        }
+
+        // 5. DELETE (POST):
+        // POST: /Song/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var song = await _context.Songs.FindAsync(id);
+            if (song != null)
+            {
+                _context.Songs.Remove(song);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
