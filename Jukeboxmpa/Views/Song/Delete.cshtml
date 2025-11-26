@@ -1,0 +1,23 @@
+@model Jukeboxmpa.Models.Song
+
+<h2>Liedje Verwijderen</h2>
+
+<div>
+    <h4>Controleer de details en bevestig verwijderen</h4>
+    <dl class="row">
+        <dt class="col-sm-2">Titel</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Title)</dd>
+
+        <dt class="col-sm-2">Artiest</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Artist)</dd>
+
+        <dt class="col-sm-2">Album</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Album)</dd>
+    </dl>
+
+    <form asp-action="Delete" asp-route-id="@Model.ID" method="post">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-danger">Verwijderen</button>
+        <a asp-action="Index" class="btn btn-secondary">Annuleren</a>
+    </form>
+</div>
