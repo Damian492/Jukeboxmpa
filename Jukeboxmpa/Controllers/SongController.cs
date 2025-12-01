@@ -44,8 +44,51 @@ namespace Jukeboxmpa.Controllers
             return View(song);
         }
 
-        // 4. DELETE (GET):
-        // GET: /Song/Delete/5
+        // 4. EDIT (GET):
+        // GET: /Song/Edit
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var song = await _context.Songs.FindAsync(id.Value);
+            if (song == null)
+                return NotFound();
+
+            return View(song);
+        }
+
+        // 5. EDIT (POST):
+        // POST: /Song/Edit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Artist,Album,FilePath")] Song song)
+        {
+            if (id != song.ID)
+                return NotFound();
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(song);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!await _context.Songs.AnyAsync(e => e.ID == song.ID))
+                    {
+                        return NotFound();
+                    }
+                    throw;
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(song);
+        }
+
+        // 6. DELETE (GET):
+        // GET: /Song/Delete
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -60,8 +103,8 @@ namespace Jukeboxmpa.Controllers
             return View(song);
         }
 
-        // 5. DELETE (POST):
-        // POST: /Song/Delete/5
+        // 7. DELETE (POST):
+        // POST: /Song/Delete
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
