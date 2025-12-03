@@ -21,8 +21,9 @@
         {
             foreach (var g in (IEnumerable<string>)ViewBag.Genres)
             {
-                var selected = string.Equals(Request.Query["genre"], g) ? "selected" : "";
-                <option value="@g" @selected>@g</option>
+                @* Use ViewContext.HttpContext.Request.Query to avoid "Request does not exist" error.
+                   Render the "selected" attribute as an attribute value (not inline C# in attribute area). *@
+                <option value="@g" selected="@(string.Equals((string)ViewContext.HttpContext.Request.Query["genre"], g) ? "selected" : null)">@g</option>
             }
         }
     </select>

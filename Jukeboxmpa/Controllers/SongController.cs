@@ -28,7 +28,8 @@ namespace Jukeboxmpa.Controllers
                 .Distinct()
                 .OrderBy(g => g);
 
-            ViewBag.Genres = new SelectList(await genresQuery.ToListAsync());
+            // Provide a plain list of strings so the view can enumerate it as IEnumerable<string>
+            ViewBag.Genres = await genresQuery.ToListAsync();
 
             // Query songs and apply optional filter.
             var songs = _context.Songs.AsQueryable();
