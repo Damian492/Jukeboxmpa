@@ -21,8 +21,10 @@ namespace Jukeboxmpa.Controllers
             return View(await _context.Songs.ToListAsync());
         }
 
-        // 2. CREATE (GET):
+        // CREATE (GET)
         // GET: /Song/Create
+        // Returns a blank form to create a new song.
+        // Returns a blank form to create a new song.
         public IActionResult Create()
         {
             return View();

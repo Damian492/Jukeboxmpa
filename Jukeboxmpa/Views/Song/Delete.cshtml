@@ -1,5 +1,8 @@
 @model Jukeboxmpa.Models.Song
 
+@* Delete view - shows details of the selected song and asks for confirmation.
+   The form posts back to the Delete POST action which will remove the record. *@
+
 <h2>Liedje Verwijderen</h2>
 
 <div>
@@ -17,6 +20,7 @@
 
     <form asp-action="Delete" asp-route-id="@Model.ID" method="post">
         @Html.AntiForgeryToken()
+        @* Posting this form triggers the DeleteConfirmed action in the controller. *@
         <button type="submit" class="btn btn-danger">Verwijderen</button>
         <a asp-action="Index" class="btn btn-secondary">Annuleren</a>
     </form>

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Jukeboxmpa.Controllers
 {
+    // Standard Home controller for basic site pages and error handling.
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -13,16 +14,19 @@ namespace Jukeboxmpa.Controllers
             _logger = logger;
         }
 
+        // GET: /Home/Index
         public IActionResult Index()
         {
             return View();
         }
 
+        // GET: /Home/Privacy
         public IActionResult Privacy()
         {
             return View();
         }
 
+        // Error page action - uses ErrorViewModel to show request id for diagnostics.
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

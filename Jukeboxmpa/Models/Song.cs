@@ -1,11 +1,13 @@
 ﻿namespace Jukeboxmpa.Models
 {
+    // Simple domain model representing a Song.
+    // The properties correspond to table columns in the database.
     public class Song
     {
-        public int ID { get; set; } // unieke ID voor het iedje
-        public string? Title { get; set; } // naam van het liedje
-        public string? Artist { get; set; } // artiest van het liedje
-        public string? Album { get; set; } // naam album
-        public string? FilePath { get; set; } // pad naar het audiobestand
+        public int ID { get; set; } // unique identifier (primary key)
+        public string? Title { get; set; } // song title
+        public string? Artist { get; set; } // artist name
+        public string? Album { get; set; } // album name
+        public string? FilePath { get; set; } // path/URL to the audio file
     }
 }

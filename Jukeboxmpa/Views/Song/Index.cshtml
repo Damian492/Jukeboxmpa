@@ -1,6 +1,10 @@
 ﻿@using Jukeboxmpa.Models
 @model IEnumerable<Jukeboxmpa.Models.Song>
 
+@* Index view - shows an overview (table) of all songs.
+   Each row has actions to edit or delete the song.
+   The "Nieuw Liedje Toevoegen" button navigates to /Song/Create. *@
+
 <h2>Muziekbeheer</h2>
 
 <p>
@@ -10,7 +14,7 @@
 <table class="table">
     <thead>
         <tr>
-            @* categorie add to here to expand list *@
+            @* categories / columns for the song list *@
             <th>@Html.DisplayNameFor(model => model.Title)</th>
             <th>@Html.DisplayNameFor(model => model.Artist)</th>
             <th>@Html.DisplayNameFor(model => model.Album)</th>
@@ -21,7 +25,7 @@
         @foreach (var item in Model)
         {
             <tr>
-                @* add categories *@
+                @* show values for each song; actions on the right *@
                 <td>@Html.DisplayFor(modelItem => item.Title)</td>
                 <td>@Html.DisplayFor(modelItem => item.Artist)</td>
                 <td>@Html.DisplayFor(modelItem => item.Album)</td>

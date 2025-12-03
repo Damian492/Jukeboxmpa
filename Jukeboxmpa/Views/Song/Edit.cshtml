@@ -1,9 +1,13 @@
 ﻿@model Jukeboxmpa.Models.Song
 
+@* Edit view - displays a form pre-filled with the Song to edit.
+   The hidden ID field ensures the POST identifies which record to update. *@
+
 <h2>Liedje Bewerken</h2>
 
 <form asp-action="Edit" method="post">
     @Html.AntiForgeryToken()
+    @* Hidden ID ensures the correct song is updated on POST *@
     <input asp-for="ID" type="hidden" />
 
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -22,17 +26,21 @@
 
     <div class="form-group">
         <label asp-for="Album"></label>
-		<input asp-for="Album" class="form-control" />
-		<span asp-validation-for="Album" class="text-danger"></span>
+        <input asp-for="Album" class="form-control" />
+        <span asp-validation-for="Album" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="FilePath"></label>
         <input asp-for="FilePath" class="form-control" />
-		<span asp-validation-for="FilePath" class="text-danger"></span>
+        <span asp-validation-for="FilePath" class="text-danger"></span>
     </div>
-	<button type="submit" class="btn btn-primary">Opslaan</button>
-	<a asp-action="Index" class="btn btn-secondary">Annuleren</a>
+    <button type="submit" class="btn btn-primary">Opslaan</button>
+    <a asp-action="Index" class="btn btn-secondary">Annuleren</a>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
 
 
 
