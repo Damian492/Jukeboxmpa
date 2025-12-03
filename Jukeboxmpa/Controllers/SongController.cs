@@ -2,9 +2,12 @@
 using Jukeboxmpa.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Linq;
 
 namespace Jukeboxmpa.Controllers
 {
+    // Controller that handles CRUD operations for Song entities.
     public class SongController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -14,27 +17,41 @@ namespace Jukeboxmpa.Controllers
             _context = context;
         }
 
-        // 1. READ (Overzicht):
-        // GET: /Song/Index
-        public async Task<IActionResult> Index()
+        // READ (Overview) with optional genre filter
+        // GET: /Song/Index?genre=Rock
+        public async Task<IActionResult> Index(string? genre)
         {
-            return View(await _context.Songs.ToListAsync());
+            // Build a distinct list of genres for the filter dropdown.
+            var genresQuery = _context.Songs
+                .Select(s => s.Genre)
+                .Where(g => g != null)
+                .Distinct()
+                .OrderBy(g => g);
+
+            ViewBag.Genres = new SelectList(await genresQuery.ToListAsync());
+
+            // Query songs and apply optional filter.
+            var songs = _context.Songs.AsQueryable();
+            if (!string.IsNullOrEmpty(genre))
+            {
+                songs = songs.Where(s => s.Genre == genre);
+            }
+
+            return View(await songs.ToListAsync());
         }
 
         // CREATE (GET)
         // GET: /Song/Create
-        // Returns a blank form to create a new song.
-        // Returns a blank form to create a new song.
         public IActionResult Create()
         {
             return View();
         }
 
-        // 3. CREATE (POST):
+        // CREATE (POST)
         // POST: /Song/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Artist,Album,FilePath")] Song song)
+        public async Task<IActionResult> Create([Bind("Title,Artist,Album,FilePath,Genre")] Song song)
         {
             if (ModelState.IsValid)
             {
@@ -46,8 +63,8 @@ namespace Jukeboxmpa.Controllers
             return View(song);
         }
 
-        // 4. EDIT (GET):
-        // GET: /Song/Edit
+        // EDIT (GET)
+        // GET: /Song/Edit/{id}
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -60,11 +77,11 @@ namespace Jukeboxmpa.Controllers
             return View(song);
         }
 
-        // 5. EDIT (POST):
-        // POST: /Song/Edit
+        // EDIT (POST)
+        // POST: /Song/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Artist,Album,FilePath")] Song song)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Artist,Album,FilePath,Genre")] Song song)
         {
             if (id != song.ID)
                 return NotFound();
@@ -89,8 +106,8 @@ namespace Jukeboxmpa.Controllers
             return View(song);
         }
 
-        // 6. DELETE (GET):
-        // GET: /Song/Delete
+        // DELETE (GET)
+        // GET: /Song/Delete/{id}
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -105,8 +122,8 @@ namespace Jukeboxmpa.Controllers
             return View(song);
         }
 
-        // 7. DELETE (POST):
-        // POST: /Song/Delete
+        // DELETE (POST)
+        // POST: /Song/Delete/{id}
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

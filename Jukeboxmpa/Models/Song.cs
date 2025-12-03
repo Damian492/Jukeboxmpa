@@ -9,5 +9,6 @@
         public string? Artist { get; set; } // artist name
         public string? Album { get; set; } // album name
         public string? FilePath { get; set; } // path/URL to the audio file
+        public string? Genre { get; set; } // genre of the song
     }
 }

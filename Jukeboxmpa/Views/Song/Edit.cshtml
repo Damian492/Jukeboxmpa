@@ -34,6 +34,14 @@
         <input asp-for="FilePath" class="form-control" />
         <span asp-validation-for="FilePath" class="text-danger"></span>
     </div>
+
+    @* New: Genre input *@
+    <div class="form-group">
+        <label asp-for="Genre"></label>
+        <input asp-for="Genre" class="form-control" />
+        <span asp-validation-for="Genre" class="text-danger"></span>
+    </div>
+
     <button type="submit" class="btn btn-primary">Opslaan</button>
     <a asp-action="Index" class="btn btn-secondary">Annuleren</a>
 </form>
