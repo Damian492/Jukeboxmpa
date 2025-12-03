@@ -10,8 +10,10 @@
 <table class="table">
     <thead>
         <tr>
+            @* categorie add to here to expand list *@
             <th>@Html.DisplayNameFor(model => model.Title)</th>
             <th>@Html.DisplayNameFor(model => model.Artist)</th>
+            <th>@Html.DisplayNameFor(model => model.Album)</th>
             <th></th>
         </tr>
     </thead>
@@ -19,8 +21,10 @@
         @foreach (var item in Model)
         {
             <tr>
+                @* add categories *@
                 <td>@Html.DisplayFor(modelItem => item.Title)</td>
                 <td>@Html.DisplayFor(modelItem => item.Artist)</td>
+                <td>@Html.DisplayFor(modelItem => item.Album)</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.ID">Bewerken</a> |
                     <a asp-action="Delete" asp-route-id="@item.ID">Verwijderen</a>
