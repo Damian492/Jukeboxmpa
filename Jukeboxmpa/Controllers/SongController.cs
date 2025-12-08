@@ -41,6 +41,20 @@ namespace Jukeboxmpa.Controllers
             return View(await songs.ToListAsync());
         }
 
+        // Details (GET)
+        // GET: /Song/Details/{id}
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var song = await _context.Songs.FirstOrDefaultAsync(m => m.ID == id.Value);
+            if (song == null)
+                return NotFound();
+
+            return View(song);
+        }
+
         // CREATE (GET)
         // GET: /Song/Create
         public IActionResult Create()
@@ -52,7 +66,7 @@ namespace Jukeboxmpa.Controllers
         // POST: /Song/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Artist,Album,FilePath,Genre")] Song song)
+        public async Task<IActionResult> Create([Bind("Title,Artist,Album,FilePath,Genre,Credits")] Song song)
         {
             if (ModelState.IsValid)
             {
@@ -82,7 +96,7 @@ namespace Jukeboxmpa.Controllers
         // POST: /Song/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Artist,Album,FilePath,Genre")] Song song)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Artist,Album,FilePath,Genre,Credits")] Song song)
         {
             if (id != song.ID)
                 return NotFound();

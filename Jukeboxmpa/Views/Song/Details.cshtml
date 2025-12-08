@@ -1,0 +1,31 @@
+﻿@model Jukeboxmpa.Models.Song
+
+@* Details view - shows all information for a single song, including Credits *@
+
+<h2>Song Details</h2>
+
+<div>
+    <h4>Details</h4>
+    <dl class="row">
+        <dt class="col-sm-2">Titel</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(m => m.Title)</dd>
+
+        <dt class="col-sm-2">Artiest</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(m => m.Artist)</dd>
+
+        <dt class="col-sm-2">Album</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(m => m.Album)</dd>
+
+        <dt class="col-sm-2">Bestand</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(m => m.FilePath)</dd>
+
+        <dt class="col-sm-2">Genre</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(m => m.Genre)</dd>
+
+        <dt class="col-sm-2">Credits</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(m => m.Credits)</dd>
+    </dl>
+
+    <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-primary">Bewerken</a>
+    <a asp-action="Index" class="btn btn-secondary">Terug naar overzicht</a>
+</div>

@@ -35,11 +35,18 @@
         <span asp-validation-for="FilePath" class="text-danger"></span>
     </div>
 
-    @* New: Genre input *@
+    @* Genre input *@
     <div class="form-group">
         <label asp-for="Genre"></label>
         <input asp-for="Genre" class="form-control" />
         <span asp-validation-for="Genre" class="text-danger"></span>
+    </div>
+
+    @* New: Credits textarea so credits can be edited *@
+    <div class="form-group">
+        <label asp-for="Credits"></label>
+        <textarea asp-for="Credits" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Credits" class="text-danger"></span>
     </div>
 
     <button type="submit" class="btn btn-primary">Opslaan</button>

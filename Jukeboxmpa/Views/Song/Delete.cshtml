@@ -20,6 +20,10 @@
         @* Show Genre on delete confirmation *@
         <dt class="col-sm-2">Genre</dt>
         <dd class="col-sm-10">@Html.DisplayFor(model => model.Genre)</dd>
+
+        @* New: show Credits on delete confirmation *@
+        <dt class="col-sm-2">Credits</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Credits)</dd>
     </dl>
 
     <form asp-action="Delete" asp-route-id="@Model.ID" method="post">

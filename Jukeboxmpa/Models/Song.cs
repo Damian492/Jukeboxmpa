@@ -10,5 +10,8 @@
         public string? Album { get; set; } // album name
         public string? FilePath { get; set; } // path/URL to the audio file
         public string? Genre { get; set; } // genre of the song
+
+        // New: free-form credits text (e.g. "Performed by ... / Written by ...")
+        public string? Credits { get; set; }
     }
 }
