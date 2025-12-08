@@ -1,5 +1,6 @@
 using Jukeboxmpa.Data;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 // Program.cs configures services and the HTTP request pipeline.
 // - Adds DbContext configured for SQLite using the connection string in appsettings.json.
@@ -31,8 +32,26 @@ app.UseRouting();
 app.UseAuthentication(); // if authentication is configured
 app.UseAuthorization();
 
+// apply pending EF Core migrations at startup (create scope first)
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+}
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Song}/{action=Index}/{id?}");
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    // Log the connection string used by EF Core
+    var conn = db.Database.GetDbConnection().ConnectionString;
+    Console.WriteLine($"EF Core connection string: {conn}");
+}
+
 app.Run();
+
+
+
