@@ -1,11 +1,13 @@
 ﻿using Jukeboxmpa.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore; // <-- NEW USING
+using Microsoft.AspNetCore.Identity; // Needed if you want to use IdentityUser directly
 
 namespace Jukeboxmpa.Data
 {
-    // EF Core DbContext for the application.
-    // Configure the context in Program.cs to use SQLite.
-    public class ApplicationDbContext : DbContext
+    // The class now inherits from IdentityDbContext<IdentityUser>
+    // This tells EF Core to include all the standard Identity tables (AspNetUsers, AspNetRoles, etc.)
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -13,6 +15,6 @@ namespace Jukeboxmpa.Data
         }
 
         // Songs DbSet maps to the Songs table in the database.
-        public DbSet<Song> Songs { get; set; } 
+        public DbSet<Song> Songs { get; set; }
     }
 }
