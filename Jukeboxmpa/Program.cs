@@ -2,6 +2,7 @@ using Jukeboxmpa.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using Microsoft.AspNetCore.Identity;
+using Jukeboxmpa.Services;
 
 // Program.cs configures services and the HTTP request pipeline.
 // - Adds DbContext configured for SQLite using the connection string in appsettings.json.
@@ -17,6 +18,10 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true; // make the cookie accessible only via HTTP
     options.Cookie.IsEssential = true; // make the cookie essential for the application to function
 });
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSession();
+builder.Services.AddScoped <SessionPlaylistService>();
 
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
