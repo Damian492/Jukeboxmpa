@@ -101,5 +101,52 @@ namespace Jukeboxmpa.Controllers
             await _db.SaveChangesAsync();
             return RedirectToAction("My");
         }
+
+        // GET: /Playlist/Details
+        public async Task<IActionResult> Details(int id)
+        {
+            var playlist = await _db.Playlists
+                .Include(p => p.Songs)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (playlist == null)
+                return NotFound();
+
+            // Only show private playlists to the owner
+            if (!playlist.IsPublic && (!User.Identity.IsAuthenticated || playlist.UserId != _userManager.GetUserId(User)))
+                return Forbid();
+
+            // Provide all songs for the add-song dropdown
+            ViewBag.AllSongs = await _db.Songs.ToListAsync();
+
+            return View(playlist);
+        }
+
+        // POST: /Playlist/AddSong
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddSong(int playlistId, int songId)
+        {
+            var playlist = await _db.Playlists
+                .Include(p => p.Songs)
+                .FirstOrDefaultAsync(p => p.Id == playlistId);
+
+            if (playlist == null)
+                return NotFound();
+
+            // Only allow if public or owner
+            var isOwner = User.Identity.IsAuthenticated && playlist.UserId == _userManager.GetUserId(User);
+            if (!playlist.IsPublic && !isOwner)
+                return Forbid();
+
+            var song = await _db.Songs.FindAsync(songId);
+            if (song != null && !playlist.Songs.Any(s => s.ID == songId))
+            {
+                playlist.Songs.Add(song);
+                await _db.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Details", new { id = playlistId });
+        }
     }
 }

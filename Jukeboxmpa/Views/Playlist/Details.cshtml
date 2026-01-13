@@ -1,0 +1,54 @@
+﻿@model Jukeboxmpa.Models.Playlist
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+
+<h2>Playlist: @Model.Name</h2>
+@if (Model.IsPublic)
+{
+    <span class="badge bg-success">Openbaar</span>
+}
+else
+{
+    <span class="badge bg-secondary">Privé</span>
+}
+
+@if (Model.Songs == null || !Model.Songs.Any())
+{
+    <p>Deze playlist bevat nog geen liedjes.</p>
+}
+else
+{
+    <h4>Liedjes in deze playlist:</h4>
+    <ul>
+        @foreach (var song in Model.Songs)
+        {
+            <li>
+                @song.Title - @song.Artist
+                <a asp-controller="Song" asp-action="Details" asp-route-id="@song.ID" class="btn btn-link btn-sm">Details</a>
+            </li>
+        }
+    </ul>
+}
+
+@if ((Model.IsPublic && SignInManager.IsSignedIn(User)) ||
+     (SignInManager.IsSignedIn(User) && Model.UserId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value))
+{
+    <form asp-action="AddSong" asp-route-playlistId="@Model.Id" method="post" class="mb-3">
+        <div class="form-group">
+            <label for="songId">Voeg een liedje toe:</label>
+            <select name="songId" class="form-control" required>
+                <option value="">-- Kies een liedje --</option>
+                @foreach (var song in ViewBag.AllSongs as List<Jukeboxmpa.Models.Song>)
+                {
+                    <option value="@song.ID">@song.Title - @song.Artist</option>
+                }
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Toevoegen</button>
+    </form>
+}
+
+<p>
+    <a asp-action="All" class="btn btn-secondary">Terug naar Playlists</a>
+    <a asp-controller="Song" asp-action="Index" class="btn btn-outline-secondary">Terug naar liedjes</a>
+</p>

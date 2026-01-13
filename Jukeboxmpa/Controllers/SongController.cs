@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq;
+using Microsoft.AspNetCore.Identity;
 
 namespace Jukeboxmpa.Controllers
 {
@@ -11,10 +12,12 @@ namespace Jukeboxmpa.Controllers
     public class SongController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public SongController(ApplicationDbContext context)
+        public SongController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // READ (Overview) with optional genre filter
@@ -43,16 +46,23 @@ namespace Jukeboxmpa.Controllers
 
         // Details (GET)
         // GET: /Song/Details/{id}
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
+            var playlist = await _context.Playlists
+                .Include(p => p.Songs)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (playlist == null)
                 return NotFound();
 
-            var song = await _context.Songs.FirstOrDefaultAsync(m => m.ID == id.Value);
-            if (song == null)
-                return NotFound();
+            // Only show private playlists to the owner
+            if (!playlist.IsPublic && (!User.Identity.IsAuthenticated || playlist.UserId != _userManager.GetUserId(User)))
+                return Forbid();
 
-            return View(song);
+            // Provide all songs for the add-song dropdown
+            ViewBag.AllSongs = await _context.Songs.ToListAsync();
+
+            return View(playlist);
         }
 
         // CREATE (GET)

@@ -1,5 +1,7 @@
 ﻿@using Jukeboxmpa.Models
 @model IEnumerable<Jukeboxmpa.Models.Song>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
 
 @* Index view - shows an overview (table) of all songs.
    Each row has actions to edit or delete the song.
@@ -9,7 +11,14 @@
 <h2>Muziekbeheer</h2>
 
 <p>
-    <a asp-controller="Playlist" asp-action="All" class="btn btn-secondary">Bekijk Playlists</a>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <a asp-controller="Playlist" asp-action="My" class="btn btn-secondary">Bekijk Playlists</a>
+    }
+    else
+    {
+        <a asp-controller="Playlist" asp-action="All" class="btn btn-secondary">Bekijk Playlists</a>
+    }
     <a asp-controller="Song" asp-action="Create" class="btn btn-primary" role="button">Nieuw Liedje Toevoegen</a>
 </p>
 

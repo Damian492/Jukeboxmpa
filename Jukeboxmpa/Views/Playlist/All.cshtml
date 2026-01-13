@@ -16,8 +16,9 @@ else
         @foreach (var playlist in Model)
         {
             <li>
-                @playlist.Name
+                <a asp-action="Details" asp-route-id="@playlist.Id">@playlist.Name</a>
                 @if (playlist.IsPublic) { <span class="badge bg-success">Openbaar</span> }
+                else { <span class="badge bg-secondary">Privé</span> }
             </li>
         }
     </ul>
