@@ -1,8 +1,42 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@using System.Collections.Generic
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@{
+    ViewData["Title"] = "Home Page";
+    var playlists = ViewBag.PublicPlaylists as List<Jukeboxmpa.Models.Playlist>;
+}
+<div class="row">
+    <div class="col-md-3">
+        <form method="get" asp-action="Index">
+            <input type="text" name="search" class="form-control mb-2" placeholder="Zoek playlist..." value="@(ViewContext.HttpContext.Request.Query["search"])" />
+            <button type="submit" class="btn btn-outline-primary btn-sm mb-3">Zoeken</button>
+        </form>
+        <h5>Openbare Playlists</h5>
+        <ul class="list-group">
+            @if (playlists != null && playlists.Any())
+            {
+                foreach (var playlist in playlists)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a asp-controller="Playlist" asp-action="Details" asp-route-id="@playlist.Id">@playlist.Name</a>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <form asp-controller="Playlist" asp-action="SaveToMyList" method="post" style="display:inline;">
+                                <input type="hidden" name="playlistId" value="@playlist.Id" />
+                                <button type="submit" class="btn btn-sm btn-success">Opslaan</button>
+                            </form>
+                        }
+                    </li>
+                }
+            }
+            else
+            {
+                <li class="list-group-item">Geen openbare playlists gevonden.</li>
+            }
+        </ul>
+    </div>
+    <div class="col-md-9">
+        @* Main content here *@
+    </div>
 </div>

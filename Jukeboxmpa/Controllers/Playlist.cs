@@ -148,5 +148,31 @@ namespace Jukeboxmpa.Controllers
 
             return RedirectToAction("Details", new { id = playlistId });
         }
+
+        // POST: /Playlist/SaveToMyList
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveToMyList(int playlistId)
+        {
+            if (!User.Identity.IsAuthenticated)
+                return Unauthorized();
+
+            var userId = _userManager.GetUserId(User);
+            var playlist = await _db.Playlists.Include(p => p.Songs).FirstOrDefaultAsync(p => p.Id == playlistId && p.IsPublic);
+            if (playlist == null)
+                return NotFound();
+
+            var newPlaylist = new Playlist
+            {
+                Name = playlist.Name,
+                UserId = userId,
+                IsPublic = false,
+                Songs = new List<Song>(playlist.Songs)
+            };
+            _db.Playlists.Add(newPlaylist);
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("My");
+        }
     }
 }
