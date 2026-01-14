@@ -22,7 +22,7 @@ namespace Jukeboxmpa.Controllers
 
         // READ (Overview) with optional genre filter
         // GET: /Song/Index?genre=Rock
-        public async Task<IActionResult> Index(string? genre)
+        public async Task<IActionResult> Index(string? genre, string? search)
         {
             // Build a distinct list of genres for the filter dropdown.
             var genresQuery = _context.Songs
@@ -31,7 +31,6 @@ namespace Jukeboxmpa.Controllers
                 .Distinct()
                 .OrderBy(g => g);
 
-            // Provide a plain list of strings so the view can enumerate it as IEnumerable<string>
             ViewBag.Genres = await genresQuery.ToListAsync();
 
             // Query songs and apply optional filter.
@@ -40,6 +39,16 @@ namespace Jukeboxmpa.Controllers
             {
                 songs = songs.Where(s => s.Genre == genre);
             }
+
+            // Provide public playlists for the sidebar (with optional search)
+            if (!string.IsNullOrEmpty(search))
+                ViewBag.PublicPlaylists = await _context.Playlists
+                    .Where(p => p.IsPublic && p.Name.Contains(search))
+                    .ToListAsync();
+            else
+                ViewBag.PublicPlaylists = await _context.Playlists
+                    .Where(p => p.IsPublic)
+                    .ToListAsync();
 
             return View(await songs.ToListAsync());
         }
