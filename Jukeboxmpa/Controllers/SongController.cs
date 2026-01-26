@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
+using NAudio.Wave; // Add this at the top
 
 namespace Jukeboxmpa.Controllers
 {
@@ -85,8 +86,33 @@ namespace Jukeboxmpa.Controllers
         // POST: /Song/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Artist,Album,FilePath,Genre,Credits")] Song song)
+        public async Task<IActionResult> Create([Bind("Title,Artist,Album,Genre,Credits")] Song song, IFormFile mp3File)
         {
+            if (mp3File == null || mp3File.Length == 0)
+            {
+                ModelState.AddModelError("FilePath", "MP3 bestand is verplicht.");
+                return View(song);
+            }
+            
+            // Save the file to wwwroot/music
+            var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "music");
+            Directory.CreateDirectory(uploads);
+            var fileName = Guid.NewGuid() + Path.GetExtension(mp3File.FileName);
+            var filePath = Path.Combine(uploads, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await mp3File.CopyToAsync(stream);
+            }
+
+            // Extract duration using NAudio
+            using (var reader = new Mp3FileReader(filePath))
+            {
+                song.Duration = (int)reader.TotalTime.TotalSeconds;
+            }
+
+            song.FilePath = "/music/" + fileName;
+
             if (ModelState.IsValid)
             {
                 _context.Add(song);

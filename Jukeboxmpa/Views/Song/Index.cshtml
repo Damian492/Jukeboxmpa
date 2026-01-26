@@ -7,6 +7,9 @@
 @{
     ViewData["Title"] = "Home Page";
     var playlists = ViewBag.PublicPlaylists as List<Jukeboxmpa.Models.Playlist>;
+
+    string FormatDuration(int? seconds) =>
+        seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value).ToString(@"mm\:ss") : "";
 }
 
 <div class="row">
@@ -87,6 +90,7 @@
                     <th>@Html.DisplayNameFor(model => model.Artist)</th>
                     <th>@Html.DisplayNameFor(model => model.Album)</th>
                     <th>Genre</th>
+                    <th>Duur</th>
                     <th></th>
                 </tr>
             </thead>
@@ -99,6 +103,7 @@
                         <td>@Html.DisplayFor(modelItem => item.Artist)</td>
                         <td>@Html.DisplayFor(modelItem => item.Album)</td>
                         <td>@Html.DisplayFor(modelItem => item.Genre)</td>
+                        <td>@FormatDuration(item.Duration)</td>
                         <td>
                             <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
                             <a asp-action="Edit" asp-route-id="@item.ID">Bewerken</a> |
