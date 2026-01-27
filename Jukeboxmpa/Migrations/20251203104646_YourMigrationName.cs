@@ -4,10 +4,10 @@
 
 namespace Jukeboxmpa.Migrations
 {
-    /// <inheritdoc />
+
     public partial class YourMigrationName : Migration
     {
-        /// <inheritdoc />
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
@@ -17,7 +17,7 @@ namespace Jukeboxmpa.Migrations
                 nullable: true);
         }
 
-        /// <inheritdoc />
+
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(

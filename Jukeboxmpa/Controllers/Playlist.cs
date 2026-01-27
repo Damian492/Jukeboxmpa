@@ -20,7 +20,7 @@ namespace Jukeboxmpa.Controllers
             _userManager = userManager;
         }
 
-        // GET: /Playlist/My
+
         public async Task<IActionResult> My()
         {
             if (User.Identity.IsAuthenticated)
@@ -39,7 +39,7 @@ namespace Jukeboxmpa.Controllers
             }
         }
 
-        // GET: /Playlist/All
+
         public async Task<IActionResult> All()
         {
             var playlists = await _db.Playlists
@@ -50,7 +50,7 @@ namespace Jukeboxmpa.Controllers
             return View(playlists);
         }
 
-        // POST: /Playlist/Save
+
         [HttpPost]
         public async Task<IActionResult> Save(string name, bool isPublic)
         {
@@ -75,13 +75,13 @@ namespace Jukeboxmpa.Controllers
             return RedirectToAction("My");
         }
 
-        // GET: /Playlist/Create
+
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: /Playlist/Create
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,IsPublic")] Playlist playlist)
@@ -102,7 +102,6 @@ namespace Jukeboxmpa.Controllers
             return RedirectToAction("My");
         }
 
-        // GET: /Playlist/Details
         public async Task<IActionResult> Details(int id)
         {
             var playlist = await _db.Playlists
@@ -122,7 +121,7 @@ namespace Jukeboxmpa.Controllers
             return View(playlist);
         }
 
-        // POST: /Playlist/AddSong
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddSong(int playlistId, int songId)
@@ -149,7 +148,7 @@ namespace Jukeboxmpa.Controllers
             return RedirectToAction("Details", new { id = playlistId });
         }
 
-        // POST: /Playlist/SaveToMyList
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SaveToMyList(int playlistId)
@@ -175,7 +174,7 @@ namespace Jukeboxmpa.Controllers
             return RedirectToAction("My");
         }
 
-        // POST: /Playlist/Delete
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
@@ -190,7 +189,7 @@ namespace Jukeboxmpa.Controllers
             return RedirectToAction("My");
         }
 
-        // POST: /Playlist/RemoveSong
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveSong(int playlistId, int songId)

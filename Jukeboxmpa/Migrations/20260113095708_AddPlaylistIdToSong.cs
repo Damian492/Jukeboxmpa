@@ -4,10 +4,10 @@
 
 namespace Jukeboxmpa.Migrations
 {
-    /// <inheritdoc />
+
     public partial class AddPlaylistIdToSong : Migration
     {
-        /// <inheritdoc />
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
@@ -55,7 +55,7 @@ namespace Jukeboxmpa.Migrations
                 principalColumn: "Id");
         }
 
-        /// <inheritdoc />
+
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
