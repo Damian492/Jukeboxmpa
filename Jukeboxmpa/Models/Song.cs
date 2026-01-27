@@ -17,6 +17,7 @@
         public int? PlaylistId { get; set; }
         public Playlist Playlist { get; set; }
 
+        // Add this property:
         public int? Duration { get; set; } // Duration in seconds
     }
 }

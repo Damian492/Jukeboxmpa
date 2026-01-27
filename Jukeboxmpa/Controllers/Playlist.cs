@@ -175,43 +175,18 @@ namespace Jukeboxmpa.Controllers
             return RedirectToAction("My");
         }
 
-        // POST: /Playlist/Delete
+        // POST: /Playlist/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Create([Bind("Title,Artist,Album,FilePath,Genre,Credits")] Song song)
         {
-            var userId = _userManager.GetUserId(User);
-            var playlist = await _db.Playlists.FirstOrDefaultAsync(p => p.Id == id && p.UserId == userId);
-            if (playlist != null)
+            if (ModelState.IsValid)
             {
-                _db.Playlists.Remove(playlist);
+                _db.Add(song);
                 await _db.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction("My");
-        }
-
-        // POST: /Playlist/RemoveSong
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RemoveSong(int playlistId, int songId)
-        {
-            var playlist = await _db.Playlists
-                .Include(p => p.Songs)
-                .FirstOrDefaultAsync(p => p.Id == playlistId);
-
-            var userId = _userManager.GetUserId(User);
-            var isOwner = playlist != null && playlist.UserId == userId;
-
-            if (playlist == null || (!playlist.IsPublic && !isOwner))
-                return Forbid();
-
-            var song = playlist.Songs.FirstOrDefault(s => s.ID == songId);
-            if (song != null)
-            {
-                playlist.Songs.Remove(song);
-                await _db.SaveChangesAsync();
-            }
-            return RedirectToAction("Details", new { id = playlistId });
+            return View(song);
         }
     }
 }

@@ -1,8 +1,11 @@
 ﻿@model Jukeboxmpa.Models.Song
 
+@* Create view - displays a form to add a new Song.
+   Uses tag helpers to bind inputs to the Song model and unobtrusive validation. *@
+
 <h2>Nieuw Liedje Toevoegen</h2>
 
-<form asp-action="Create" method="post" enctype="multipart/form-data">
+<form asp-action="Create" method="post">
     @Html.AntiForgeryToken()
 
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -23,14 +26,17 @@
         <span asp-validation-for="Album" class="text-danger"></span>
     </div>
     <div class="form-group">
+        <label asp-for="FilePath"></label>
+        <input asp-for="FilePath" class="form-control" placeholder="/music/jouwliedje.mp3" />
+        <span asp-validation-for="FilePath" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
         <label asp-for="Genre"></label>
         <input asp-for="Genre" class="form-control" placeholder="Bijv. Rock, Pop, Jazz" />
         <span asp-validation-for="Genre" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label for="mp3File">MP3 bestand</label>
-        <input type="file" name="mp3File" accept=".mp3" class="form-control" />
-    </div>
+
     <button type="submit" class="btn btn-primary">Opslaan</button>
     <a asp-action="Index" class="btn btn-secondary">Annuleren</a>
 </form>

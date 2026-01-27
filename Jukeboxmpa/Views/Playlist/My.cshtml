@@ -15,9 +15,6 @@ else
                 <a asp-action="Details" asp-route-id="@playlist.Id">@playlist.Name</a>
                 @if (playlist.IsPublic) { <span class="badge bg-success">Openbaar</span> }
                 else { <span class="badge bg-secondary">Privé</span> }
-                <form asp-action="Delete" asp-route-id="@playlist.Id" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Weet je zeker dat je deze playlist wilt verwijderen?');">Verwijder</button>
-                </form>
             </li>
         }
     </ul>

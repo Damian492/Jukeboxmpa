@@ -25,22 +25,9 @@ else
             <li>
                 @song.Title - @song.Artist
                 <a asp-controller="Song" asp-action="Details" asp-route-id="@song.ID" class="btn btn-link btn-sm">Details</a>
-                <form asp-action="RemoveSong" asp-route-playlistId="@Model.Id" asp-route-songId="@song.ID" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Verwijder dit liedje uit de playlist?');">Verwijder</button>
-                </form>
             </li>
         }
     </ul>
-}
-
-@{
-    int totalSeconds = Model.Songs?.Sum(s => s.Duration ?? 0) ?? 0;
-    string totalDuration = TimeSpan.FromSeconds(totalSeconds).ToString(@"mm\:ss");
-}
-
-@if (Model.Songs != null && Model.Songs.Any())
-{
-    <h4>Totaal afspeeltijd: @totalDuration</h4>
 }
 
 @if ((Model.IsPublic && SignInManager.IsSignedIn(User)) ||

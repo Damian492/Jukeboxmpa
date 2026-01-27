@@ -55,6 +55,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseSession();
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+    Secure = CookieSecurePolicy.Always,
+    MinimumSameSitePolicy = SameSiteMode.Strict
+});
 
 // apply pending EF Core migrations at startup
 using (var scope = app.Services.CreateScope())
