@@ -1,45 +1,21 @@
 ﻿@model Jukeboxmpa.Models.Song
 
-@* Create view - displays a form to add a new Song.
-   Uses tag helpers to bind inputs to the Song model and unobtrusive validation. *@
-
 <h2>Nieuw Liedje Toevoegen</h2>
 
-<form asp-action="Create" method="post" enctype="multipart/form-data">
-    @Html.AntiForgeryToken()
-
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+<form asp-action="Create" method="post">
     <div class="form-group">
         <label asp-for="Title"></label>
-        <input asp-for="Title" class="form-control" placeholder="Title" />
-        <span asp-validation-for="Title" class="text-danger"></span>
+        <input asp-for="Title" class="form-control" />
     </div>
     <div class="form-group">
         <label asp-for="Artist"></label>
-        <input asp-for="Artist" class="form-control" placeholder="Artist" />
-        <span asp-validation-for="Artist" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Album"></label>
-        <input asp-for="Album" class="form-control" placeholder="Album" />
-        <span asp-validation-for="Album" class="text-danger"></span>
+        <input asp-for="Artist" class="form-control" />
     </div>
     <div class="form-group">
         <label asp-for="FilePath"></label>
         <input asp-for="FilePath" class="form-control" placeholder="/music/jouwliedje.mp3" />
-        <span asp-validation-for="FilePath" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
-        <label asp-for="Genre"></label>
-        <input asp-for="Genre" class="form-control" placeholder="Bijv. Rock, Pop, Jazz" />
-        <span asp-validation-for="Genre" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label for="mp3File">MP3 bestand</label>
-        <input type="file" name="mp3File" accept=".mp3" class="form-control" required />
-    </div>
     <button type="submit" class="btn btn-primary">Opslaan</button>
     <a asp-action="Index" class="btn btn-secondary">Annuleren</a>
 </form>
