@@ -1,112 +1,62 @@
-﻿@using System.Collections.Generic
-@using Jukeboxmpa.Models
+﻿@using Jukeboxmpa.Models
 @model IEnumerable<Jukeboxmpa.Models.Song>
-@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
 
-@{
-    ViewData["Title"] = "Home Page";
-    var playlists = ViewBag.PublicPlaylists as List<Jukeboxmpa.Models.Playlist>;
-}
+@* Index view - shows an overview (table) of all songs.
+   Each row has actions to edit or delete the song.
+   The "Nieuw Liedje Toevoegen" button navigates to /Song/Create.
+   Also includes a genre filter dropdown that submits as a GET. *@
 
-<div class="row">
-    <!-- Sidebar: Public Playlists -->
-    <div class="col-md-3">
-        <form method="get" asp-action="Index">
-            <input type="text" name="search" class="form-control mb-2" placeholder="Zoek playlist..." value="@(ViewContext.HttpContext.Request.Query["search"])" />
-            <button type="submit" class="btn btn-outline-primary btn-sm mb-3">Zoeken</button>
-        </form>
-        <h5>Openbare Playlists</h5>
-        <ul class="list-group">
-            @if (playlists != null && playlists.Any())
+<h2>Muziekbeheer</h2>
+
+<p>
+    <a asp-controller="Playlist" asp-action="All" class="btn btn-secondary">Bekijk Playlists</a>
+    <a asp-controller="Song" asp-action="Create" class="btn btn-primary" role="button">Nieuw Liedje Toevoegen</a>
+</p>
+
+@* Genre filter form (GET) *@
+<form method="get" class="mb-3 d-flex align-items-center">
+    <label class="me-2 mb-0">Filter op genre:</label>
+    <select name="genre" class="form-select w-auto me-2">
+        <option value="">Alle</option>
+        @if (ViewBag.Genres != null)
+        {
+            foreach (var g in (IEnumerable<string>)ViewBag.Genres)
             {
-                foreach (var playlist in playlists)
-                {
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a asp-controller="Playlist" asp-action="Details" asp-route-id="@playlist.Id">@playlist.Name</a>
-                        @if (SignInManager.IsSignedIn(User))
-                        {
-                            <form asp-controller="Playlist" asp-action="SaveToMyList" method="post" style="display:inline;">
-                                <input type="hidden" name="playlistId" value="@playlist.Id" />
-                                <button type="submit" class="btn btn-sm btn-success">Opslaan</button>
-                            </form>
-                        }
-                    </li>
-                }
+                @* Use ViewContext.HttpContext.Request.Query to avoid "Request does not exist" error.
+                   Render the "selected" attribute as an attribute value (not inline C# in attribute area). *@
+                <option value="@g" selected="@(string.Equals((string)ViewContext.HttpContext.Request.Query["genre"], g) ? "selected" : null)">@g</option>
             }
-            else
-            {
-                <li class="list-group-item">Geen openbare playlists gevonden.</li>
-            }
-        </ul>
-    </div>
-    <!-- Main Content: Song List -->
-    <div class="col-md-9">
-        @* Index view - shows an overview (table) of all songs.
-           Each row has actions to edit or delete the song.
-           The "Nieuw Liedje Toevoegen" button navigates to /Song/Create.
-           Also includes a genre filter dropdown that submits as a GET. *@
+        }
+    </select>
+    <button type="submit" class="btn btn-outline-secondary">Filter</button>
+</form>
 
-        <h2>Muziekbeheer</h2>
-
-        <p>
-            @if (SignInManager.IsSignedIn(User))
-            {
-                <a asp-controller="Playlist" asp-action="My" class="btn btn-secondary">Bekijk Playlists</a>
-            }
-            else
-            {
-                <a asp-controller="Playlist" asp-action="All" class="btn btn-secondary">Bekijk Playlists</a>
-            }
-            <a asp-controller="Song" asp-action="Create" class="btn btn-primary" role="button">Nieuw Liedje Toevoegen</a>
-        </p>
-
-        @* Genre filter form (GET) *@
-        <form method="get" class="mb-3 d-flex align-items-center">
-            <label class="me-2 mb-0">Filter op genre:</label>
-            <select name="genre" class="form-select w-auto me-2">
-                <option value="">Alle</option>
-                @if (ViewBag.Genres != null)
-                {
-                    foreach (var g in (IEnumerable<string>)ViewBag.Genres)
-                    {
-                        @* Use ViewContext.HttpContext.Request.Query to avoid "Request does not exist" error.
-                           Render the "selected" attribute as an attribute value (not inline C# in attribute area). *@
-                        <option value="@g" selected="@(string.Equals((string)ViewContext.HttpContext.Request.Query["genre"], g) ? "selected" : null)">@g</option>
-                    }
-                }
-            </select>
-            <button type="submit" class="btn btn-outline-secondary">Filter</button>
-        </form>
-
-        <table class="table">
-            <thead>
-                <tr>
-                    @* categories / columns for the song list *@
-                    <th>@Html.DisplayNameFor(model => model.Title)</th>
-                    <th>@Html.DisplayNameFor(model => model.Artist)</th>
-                    <th>@Html.DisplayNameFor(model => model.Album)</th>
-                    <th>Genre</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        @* show values for each song; actions on the right *@
-                        <td>@Html.DisplayFor(modelItem => item.Title)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Artist)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Album)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Genre)</td>
-                        <td>
-                            <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                            <a asp-action="Edit" asp-route-id="@item.ID">Bewerken</a> |
-                            <a asp-action="Delete" asp-route-id="@item.ID">Verwijderen</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
+<table class="table">
+    <thead>
+        <tr>
+            @* categories / columns for the song list *@
+            <th>@Html.DisplayNameFor(model => model.Title)</th>
+            <th>@Html.DisplayNameFor(model => model.Artist)</th>
+            <th>@Html.DisplayNameFor(model => model.Album)</th>
+            <th>Genre</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @* show values for each song; actions on the right *@
+                <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                <td>@Html.DisplayFor(modelItem => item.Artist)</td>
+                <td>@Html.DisplayFor(modelItem => item.Album)</td>
+                <td>@Html.DisplayFor(modelItem => item.Genre)</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Edit" asp-route-id="@item.ID">Bewerken</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Verwijderen</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

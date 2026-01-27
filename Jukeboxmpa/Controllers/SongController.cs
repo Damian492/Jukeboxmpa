@@ -2,63 +2,68 @@
 using Jukeboxmpa.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Linq;
 
 namespace Jukeboxmpa.Controllers
 {
+    // Controller that handles CRUD operations for Song entities.
     public class SongController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
 
-        public SongController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public SongController(ApplicationDbContext context)
         {
             _context = context;
-            _userManager = userManager;
         }
 
-        public async Task<IActionResult> Index(string? genre, string? search)
+        // READ (Overview) with optional genre filter
+        // GET: /Song/Index?genre=Rock
+        public async Task<IActionResult> Index(string? genre)
         {
+            // Build a distinct list of genres for the filter dropdown.
             var genresQuery = _context.Songs
                 .Select(s => s.Genre)
                 .Where(g => g != null)
                 .Distinct()
                 .OrderBy(g => g);
 
+            // Provide a plain list of strings so the view can enumerate it as IEnumerable<string>
             ViewBag.Genres = await genresQuery.ToListAsync();
 
+            // Query songs and apply optional filter.
             var songs = _context.Songs.AsQueryable();
             if (!string.IsNullOrEmpty(genre))
             {
                 songs = songs.Where(s => s.Genre == genre);
             }
 
-            if (!string.IsNullOrEmpty(search))
-                ViewBag.PublicPlaylists = await _context.Playlists
-                    .Where(p => p.IsPublic && p.Name.Contains(search))
-                    .ToListAsync();
-            else
-                ViewBag.PublicPlaylists = await _context.Playlists
-                    .Where(p => p.IsPublic)
-                    .ToListAsync();
-
             return View(await songs.ToListAsync());
         }
 
-        public async Task<IActionResult> Details(int id)
+        // Details (GET)
+        // GET: /Song/Details/{id}
+        public async Task<IActionResult> Details(int? id)
         {
-            var song = await _context.Songs.FirstOrDefaultAsync(m => m.ID == id);
+            if (id == null)
+                return NotFound();
+
+            var song = await _context.Songs.FirstOrDefaultAsync(m => m.ID == id.Value);
             if (song == null)
                 return NotFound();
 
             return View(song);
         }
 
+        // CREATE (GET)
+        // GET: /Song/Create
         public IActionResult Create()
         {
             return View();
         }
 
+        // CREATE (POST)
+        // POST: /Song/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Title,Artist,Album,FilePath,Genre,Credits")] Song song)
@@ -69,9 +74,12 @@ namespace Jukeboxmpa.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(song);
         }
 
+        // EDIT (GET)
+        // GET: /Song/Edit/{id}
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -84,6 +92,8 @@ namespace Jukeboxmpa.Controllers
             return View(song);
         }
 
+        // EDIT (POST)
+        // POST: /Song/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Artist,Album,FilePath,Genre,Credits")] Song song)
@@ -111,6 +121,8 @@ namespace Jukeboxmpa.Controllers
             return View(song);
         }
 
+        // DELETE (GET)
+        // GET: /Song/Delete/{id}
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -125,6 +137,8 @@ namespace Jukeboxmpa.Controllers
             return View(song);
         }
 
+        // DELETE (POST)
+        // POST: /Song/Delete/{id}
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
