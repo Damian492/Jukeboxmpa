@@ -55,6 +55,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseSession();
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+    Secure = CookieSecurePolicy.Always,
+    MinimumSameSitePolicy = SameSiteMode.Strict
+});
 
 // apply pending EF Core migrations at startup
 using (var scope = app.Services.CreateScope())
@@ -66,7 +71,7 @@ using (var scope = app.Services.CreateScope())
 // Mapped Razor Pages will automatically be available now.
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Song}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages(); // Map Razor Pages for Identity
 

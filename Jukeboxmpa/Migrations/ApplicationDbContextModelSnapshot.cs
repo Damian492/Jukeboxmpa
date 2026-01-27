@@ -48,9 +48,11 @@ namespace Jukeboxmpa.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Album")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Artist")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Credits")
@@ -60,6 +62,7 @@ namespace Jukeboxmpa.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("FilePath")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Genre")
@@ -69,6 +72,7 @@ namespace Jukeboxmpa.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("ID");
