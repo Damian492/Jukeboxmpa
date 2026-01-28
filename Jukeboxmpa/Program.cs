@@ -1,7 +1,7 @@
 using Jukeboxmpa.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity; // <-- NEW USING (for Identity setup)
 
 // Program.cs configures services and the HTTP request pipeline.
 // - Adds DbContext configured for SQLite using the connection string in appsettings.json.
@@ -9,28 +9,22 @@ using Microsoft.AspNetCore.Identity;
 // - Configures routing and middleware (static files, HTTPS redirection, authentication/authorization).
 var builder = WebApplication.CreateBuilder(args);
 
-//Add session services
-builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // the time before play list dissappears
-    options.Cookie.HttpOnly = true; // make the cookie accessible only via HTTP
-    options.Cookie.IsEssential = true; // make the cookie essential for the application to function
-});
-
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Configure Identity to use ApplicationDbContext for storage.
+// *****************************************************************
+// ADDED IDENTITY SERVICES
+// *****************************************************************
+// 1. Configure Identity to use ApplicationDbContext for storage.
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-// Add Razor Pages support, which is required for the Identity UI pages (Login, Register).
+// 2. Add Razor Pages support, which is required for the Identity UI pages (Login, Register).
 builder.Services.AddRazorPages();
 
 builder.Services.AddControllersWithViews();
-
+// builder.Services.AddAuthorization(); // Optional: Identity setup already includes core authorization
 
 var app = builder.Build();
 
@@ -46,29 +40,21 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthentication();
+app.UseAuthentication(); // IMPORTANT: Must come before UseAuthorization
 app.UseAuthorization();
+// *****************************************************************
 
-app.UseSession();
-app.UseCookiePolicy(new CookiePolicyOptions
-{
-    Secure = CookieSecurePolicy.Always,
-    MinimumSameSitePolicy = SameSiteMode.Strict
-});
-
-// apply pending EF Core migrations at startup
+// apply pending EF Core migrations at startup (create scope first)
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     db.Database.Migrate();
 }
 
-// Mapped Razor Pages will automatically be available now.
+// Mapped Razor Pages (Identity UI) will automatically be available now.
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.MapRazorPages(); // Map Razor Pages for Identity
+    pattern: "{controller=Song}/{action=Index}/{id?}");
 
 using (var scope = app.Services.CreateScope())
 {
