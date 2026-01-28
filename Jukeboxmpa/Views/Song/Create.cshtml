@@ -5,7 +5,7 @@
 
 <h2>Nieuw Liedje Toevoegen</h2>
 
-<form asp-action="Create" method="post">
+<form asp-action="Create" method="post" enctype="multipart/form-data">
     @Html.AntiForgeryToken()
 
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -36,7 +36,10 @@
         <input asp-for="Genre" class="form-control" placeholder="Bijv. Rock, Pop, Jazz" />
         <span asp-validation-for="Genre" class="text-danger"></span>
     </div>
-
+    <div class="form-group">
+        <label for="mp3File">MP3 bestand</label>
+        <input type="file" name="mp3File" accept=".mp3" class="form-control" required />
+    </div>
     <button type="submit" class="btn btn-primary">Opslaan</button>
     <a asp-action="Index" class="btn btn-secondary">Annuleren</a>
 </form>
