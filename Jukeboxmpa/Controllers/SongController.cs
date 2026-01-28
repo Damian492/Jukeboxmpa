@@ -5,11 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
-using NAudio.Wave; // Add this at the top
 
 namespace Jukeboxmpa.Controllers
 {
-    // Controller that handles CRUD
+    // Controller that handles CRUD operations for Song entities.
     public class SongController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,30 +20,41 @@ namespace Jukeboxmpa.Controllers
             _userManager = userManager;
         }
 
-
-        public async Task<IActionResult> Index(string? genre)
+        // READ (Overview) with optional genre filter
+        // GET: /Song/Index?genre=Rock
+        public async Task<IActionResult> Index(string? genre, string? search)
         {
-            // Build song filter dropdown.
+            // Build a distinct list of genres for the filter dropdown.
             var genresQuery = _context.Songs
                 .Select(s => s.Genre)
                 .Where(g => g != null)
                 .Distinct()
                 .OrderBy(g => g);
 
-            
             ViewBag.Genres = await genresQuery.ToListAsync();
 
-
+            // Query songs and apply optional filter.
             var songs = _context.Songs.AsQueryable();
             if (!string.IsNullOrEmpty(genre))
             {
                 songs = songs.Where(s => s.Genre == genre);
             }
 
+            // Provide public playlists for the sidebar (with optional search)
+            if (!string.IsNullOrEmpty(search))
+                ViewBag.PublicPlaylists = await _context.Playlists
+                    .Where(p => p.IsPublic && p.Name.Contains(search))
+                    .ToListAsync();
+            else
+                ViewBag.PublicPlaylists = await _context.Playlists
+                    .Where(p => p.IsPublic)
+                    .ToListAsync();
+
             return View(await songs.ToListAsync());
         }
 
-
+        // Details (GET)
+        // GET: /Song/Details/{id}
         public async Task<IActionResult> Details(int id)
         {
             var playlist = await _context.Playlists
@@ -64,41 +74,19 @@ namespace Jukeboxmpa.Controllers
             return View(playlist);
         }
 
-
+        // CREATE (GET)
+        // GET: /Song/Create
         public IActionResult Create()
         {
             return View();
         }
 
-
-
+        // CREATE (POST)
+        // POST: /Song/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Artist,Album,Genre,Credits")] Song song, IFormFile mp3File)
+        public async Task<IActionResult> Create([Bind("Title,Artist,Album,FilePath,Genre,Credits")] Song song)
         {
-            if (mp3File == null || mp3File.Length == 0)
-            {
-                ModelState.AddModelError("FilePath", "MP3 bestand is verplicht.");
-                return View(song);
-            }
-
-            var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "music");
-            Directory.CreateDirectory(uploads);
-            var fileName = Guid.NewGuid() + Path.GetExtension(mp3File.FileName);
-            var filePath = Path.Combine(uploads, fileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await mp3File.CopyToAsync(stream);
-            }
-
-            using (var reader = new NAudio.Wave.Mp3FileReader(filePath))
-            {
-                song.Duration = (int)reader.TotalTime.TotalSeconds;
-            }
-
-            song.FilePath = "/music/" + fileName;
-
             if (ModelState.IsValid)
             {
                 _context.Add(song);
@@ -109,7 +97,8 @@ namespace Jukeboxmpa.Controllers
             return View(song);
         }
 
-
+        // EDIT (GET)
+        // GET: /Song/Edit/{id}
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -122,6 +111,8 @@ namespace Jukeboxmpa.Controllers
             return View(song);
         }
 
+        // EDIT (POST)
+        // POST: /Song/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Artist,Album,FilePath,Genre,Credits")] Song song)
@@ -149,7 +140,8 @@ namespace Jukeboxmpa.Controllers
             return View(song);
         }
 
-
+        // DELETE (GET)
+        // GET: /Song/Delete/{id}
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -164,7 +156,8 @@ namespace Jukeboxmpa.Controllers
             return View(song);
         }
 
-
+        // DELETE (POST)
+        // POST: /Song/Delete/{id}
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

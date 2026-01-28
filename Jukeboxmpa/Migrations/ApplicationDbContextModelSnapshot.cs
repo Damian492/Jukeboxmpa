@@ -58,9 +58,6 @@ namespace Jukeboxmpa.Migrations
                     b.Property<string>("Credits")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("Duration")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("FilePath")
                         .IsRequired()
                         .HasColumnType("TEXT");

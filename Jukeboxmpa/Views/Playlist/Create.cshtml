@@ -1,22 +1,17 @@
-﻿    @model Jukeboxmpa.Models.Playlist
+﻿@model Jukeboxmpa.Models.Playlist
 
-<h2>Nieuwe Playlist Aanmaken</h2>
+<h2>Nieuwe Playlist Maken</h2>
 
 <form asp-action="Create" method="post">
-    @Html.AntiForgeryToken()
-
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
     <div class="form-group">
         <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" placeholder="Playlist naam" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+        <input asp-for="Name" class="form-control" />
     </div>
     <div class="form-group">
-        <label asp-for="IsPublic"></label>
-        <input asp-for="IsPublic" type="checkbox" />
-        <span asp-validation-for="IsPublic" class="text-danger"></span>
+        <label>
+            <input asp-for="IsPublic" type="checkbox" /> Openbaar maken?
+        </label>
     </div>
-    <button type="submit" class="btn btn-primary">Opslaan</button>
+    <button type="submit" class="btn btn-primary">Aanmaken</button>
     <a asp-action="My" class="btn btn-secondary">Annuleren</a>
 </form>
