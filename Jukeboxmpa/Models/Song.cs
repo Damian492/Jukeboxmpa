@@ -10,8 +10,5 @@
         public string? Genre { get; set; } // genre of the song
 
         public string? Credits { get; set; }
-
-        public int? PlaylistId { get; set; }
-        public Playlist Playlist { get; set; }
     }
 }

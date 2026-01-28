@@ -17,30 +17,6 @@ namespace Jukeboxmpa.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.22");
 
-            modelBuilder.Entity("Jukeboxmpa.Models.Playlist", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Playlists");
-                });
-
             modelBuilder.Entity("Jukeboxmpa.Models.Song", b =>
                 {
                     b.Property<int>("ID")
@@ -65,16 +41,11 @@ namespace Jukeboxmpa.Migrations
                     b.Property<string>("Genre")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("PlaylistId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("PlaylistId");
 
                     b.ToTable("Songs");
                 });
@@ -275,26 +246,6 @@ namespace Jukeboxmpa.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Jukeboxmpa.Models.Playlist", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Jukeboxmpa.Models.Song", b =>
-                {
-                    b.HasOne("Jukeboxmpa.Models.Playlist", "Playlist")
-                        .WithMany("Songs")
-                        .HasForeignKey("PlaylistId");
-
-                    b.Navigation("Playlist");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -344,11 +295,6 @@ namespace Jukeboxmpa.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Jukeboxmpa.Models.Playlist", b =>
-                {
-                    b.Navigation("Songs");
                 });
 #pragma warning restore 612, 618
         }
