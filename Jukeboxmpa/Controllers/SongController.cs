@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
-using NAudio.Wave;
+using NAudio.Wave; // Add this at the top
 
 namespace Jukeboxmpa.Controllers
 {
@@ -78,7 +78,7 @@ namespace Jukeboxmpa.Controllers
         {
             if (mp3File == null || mp3File.Length == 0)
             {
-                ModelState.AddModelError("mp3File", "MP3 bestand is verplicht.");
+                ModelState.AddModelError("FilePath", "MP3 bestand is verplicht.");
                 return View(song);
             }
 
