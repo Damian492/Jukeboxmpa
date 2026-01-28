@@ -1,12 +1,13 @@
 ﻿@model Jukeboxmpa.Models.Song
 
-
+@* Edit view - displays a form pre-filled with the Song to edit.
+   The hidden ID field ensures the POST identifies which record to update. *@
 
 <h2>Liedje Bewerken</h2>
 
 <form asp-action="Edit" method="post">
     @Html.AntiForgeryToken()
-
+    @* Hidden ID ensures the correct song is updated on POST *@
     <input asp-for="ID" type="hidden" />
 
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -34,14 +35,14 @@
         <span asp-validation-for="FilePath" class="text-danger"></span>
     </div>
 
-
+    @* Genre input *@
     <div class="form-group">
         <label asp-for="Genre"></label>
         <input asp-for="Genre" class="form-control" />
         <span asp-validation-for="Genre" class="text-danger"></span>
     </div>
 
-
+    @* New: Credits textarea so credits can be edited *@
     <div class="form-group">
         <label asp-for="Credits"></label>
         <textarea asp-for="Credits" class="form-control" rows="4"></textarea>

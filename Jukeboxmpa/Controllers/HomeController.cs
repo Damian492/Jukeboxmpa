@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Jukeboxmpa.Controllers
 {
+    // Standard Home controller for basic site pages and error handling.
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -17,26 +18,30 @@ namespace Jukeboxmpa.Controllers
             _context = context;
         }
 
-
+        // GET: /Home/Index
         public async Task<IActionResult> Index(string search)
         {
             var playlists = _context.Playlists
                 .Where(p => p.IsPublic);
 
             if (!string.IsNullOrEmpty(search))
-                playlists = playlists.Where(p => p.Name.Contains(search));
-
-            ViewBag.PublicPlaylists = await playlists.ToListAsync();
+                ViewBag.PublicPlaylists = await _context.Playlists
+                    .Where(p => p.IsPublic && p.Name.Contains(search))
+                    .ToListAsync();
+            else
+                ViewBag.PublicPlaylists = await _context.Playlists
+                    .Where(p => p.IsPublic)
+                    .ToListAsync();
             return View();
         }
 
-
+        // GET: /Home/Privacy
         public IActionResult Privacy()
         {
             return View();
         }
 
-
+        // Error page action - uses ErrorViewModel to show request id for diagnostics.
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

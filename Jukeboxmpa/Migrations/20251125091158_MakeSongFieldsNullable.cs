@@ -4,10 +4,10 @@
 
 namespace Jukeboxmpa.Migrations
 {
-
+    /// <inheritdoc />
     public partial class MakeSongFieldsNullable : Migration
     {
-
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
@@ -43,7 +43,7 @@ namespace Jukeboxmpa.Migrations
                 oldType: "TEXT");
         }
 
-
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
