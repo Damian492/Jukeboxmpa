@@ -25,13 +25,9 @@ namespace Jukeboxmpa.Controllers
                 .Where(p => p.IsPublic);
 
             if (!string.IsNullOrEmpty(search))
-                ViewBag.PublicPlaylists = await _context.Playlists
-                    .Where(p => p.IsPublic && p.Name.Contains(search))
-                    .ToListAsync();
-            else
-                ViewBag.PublicPlaylists = await _context.Playlists
-                    .Where(p => p.IsPublic)
-                    .ToListAsync();
+                playlists = playlists.Where(p => p.Name.Contains(search));
+
+            ViewBag.PublicPlaylists = await playlists.ToListAsync();
             return View();
         }
 

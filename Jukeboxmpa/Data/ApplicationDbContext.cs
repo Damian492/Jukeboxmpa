@@ -1,4 +1,6 @@
 ﻿using Jukeboxmpa.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore; // <-- NEW USING
 using Microsoft.AspNetCore.Identity; // Needed if you want to use IdentityUser directly
@@ -16,5 +18,6 @@ namespace Jukeboxmpa.Data
 
         // Songs DbSet maps to the Songs table in the database.
         public DbSet<Song> Songs { get; set; }
+        public DbSet<Playlist> Playlists { get; set; }
     }
 }
