@@ -13,5 +13,7 @@
 
         // New: free-form credits text (e.g. "Performed by ... / Written by ...")
         public string? Credits { get; set; }
+
+        public int Duration { get; set; }
     }
 }
